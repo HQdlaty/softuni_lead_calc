@@ -153,3 +153,25 @@ body {
   flex: 1;
   padding: 8px 0;
 }
+/* --- Responsive layout --- */
+@media (max-width: 800px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .inputs-panel {
+    grid-row: auto;
+  }
+
+  .main-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .sliders-panel {
+    grid-column: 1;
+  }
+
+  .chart-area {
+    min-height: 260px;
+  }
+}
