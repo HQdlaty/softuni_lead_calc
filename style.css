@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto auto;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.panel {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* LEFT PANEL */
+.inputs-panel {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 22px;
+  margin: 0 0 8px 0;
+  color: #f8fafc;
+}
+
+.inputs-panel label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: #94a3b8;
+  gap: 6px;
+}
+
+.inputs-panel input,
+.inputs-panel select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+/* MAIN PANEL (chart + stats) */
+.main-panel {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
+}
+
+.chart-area {
+  min-height: 320px;
+}
+
+.stats-area {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stat-card {
+  background: #334155;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #cbd5e1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-percent {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: bold;
+  color: #f8fafc;
+  margin: 4px 0;
+}
+
+.progress-bar {
+  background: #1e293b;
+  border-radius: 6px;
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: #f8fafc;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* SLIDERS PANEL */
+.sliders-panel {
+  grid-column: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sliders-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+.sliders-panel input[type="range"] {
+  width: 100%;
+}
