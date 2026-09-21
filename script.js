@@ -139,3 +139,22 @@ recalculateAll = function () {
 
 // re-render now that chart logic exists
 recalculateAll();
+
+// --- Currency symbol switching ---
+const currencySelect = document.getElementById('currency');
+
+const CURRENCY_SYMBOLS = {
+  USD: '$',
+  EUR: '€',
+  BGN: 'лв'
+};
+
+function updateCurrencyLabels() {
+  const symbol = CURRENCY_SYMBOLS[currencySelect.value] || '$';
+  document.querySelectorAll('.currency-symbol').forEach(el => {
+    el.textContent = symbol;
+  });
+}
+
+currencySelect.addEventListener('input', updateCurrencyLabels);
+updateCurrencyLabels();
