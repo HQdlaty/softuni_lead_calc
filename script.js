@@ -158,3 +158,47 @@ function updateCurrencyLabels() {
 
 currencySelect.addEventListener('input', updateCurrencyLabels);
 updateCurrencyLabels();
+// --- Translations ---
+const TRANSLATIONS = {
+  en: {
+    language: 'Language',
+    currency: 'Currency',
+    campaignStart: 'Campaign Start',
+    campaignEnd: 'Campaign End',
+    totalRevenue: 'Total Revenue',
+    avgOrderValue: 'Avg. Order Value',
+    prospects: 'Prospects',
+    leads: 'Leads',
+    customers: 'Customers',
+    leadResponseRate: 'Lead Response Rate',
+    prospectResponseRate: 'Prospect Response Rate'
+  },
+  bg: {
+    language: 'Език',
+    currency: 'Валута',
+    campaignStart: 'Начало на кампанията',
+    campaignEnd: 'Край на кампанията',
+    totalRevenue: 'Общ оборот',
+    avgOrderValue: 'Средна стойност на поръчката',
+    prospects: 'Контакти',
+    leads: 'Потенциални клиенти',
+    customers: 'Клиенти',
+    leadResponseRate: 'Процент отговори от потенциални клиенти',
+    prospectResponseRate: 'Процент отговори от контакти'
+  }
+};
+
+const languageSelect = document.getElementById('language');
+
+function applyLanguage() {
+  const lang = TRANSLATIONS[languageSelect.value] ? languageSelect.value : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (TRANSLATIONS[lang][key]) {
+      el.textContent = TRANSLATIONS[lang][key];
+    }
+  });
+}
+
+languageSelect.addEventListener('input', applyLanguage);
+applyLanguage();
