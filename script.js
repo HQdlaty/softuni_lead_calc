@@ -74,3 +74,68 @@ function recalculateAll() {
 
 // initial render
 recalculateAll();
+
+// --- Monthly chart (linear ramp from month 1 to campaign totals) ---
+const campaignStartInput = document.getElementById('campaignStart');
+const campaignEndInput = document.getElementById('campaignEnd');
+
+function getMonthCount() {
+  const start = new Date(campaignStartInput.value);
+  const end = new Date(campaignEndInput.value);
+  let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  return Math.max(1, months);
+}
+
+let chartInstance = null;
+
+function renderChart({ customers, leads, prospects }) {
+  const monthCount = getMonthCount();
+  const labels = Array.from({ length: monthCount }, (_, i) => `${i + 1}`);
+
+  // Linear ramp: month i shows (i/monthCount) fraction of the final totals
+  const prospectsData = labels.map((_, i) => Math.round((prospects * (i + 1)) / monthCount));
+  const leadsData = labels.map((_, i) => Math.round((leads * (i + 1)) / monthCount));
+  const customersData = labels.map((_, i) => Math.round((customers * (i + 1)) / monthCount));
+
+  const ctx = document.getElementById('chart');
+
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Prospects', data: prospectsData, backgroundColor: '#64748b' },
+        { label: 'Leads', data: leadsData, backgroundColor: '#94a3b8' },
+        { label: 'Customers', data: customersData, backgroundColor: '#e2e8f0' }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: { title: { display: true, text: 'people' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+        y: { title: { display: true, text: 'Months' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+      },
+      plugins: {
+        legend: { labels: { color: '#e2e8f0' } }
+      }
+    }
+  });
+}
+
+// hook chart rendering into the existing recalculate flow
+const originalRecalculateAll = recalculateAll;
+recalculateAll = function () {
+  originalRecalculateAll();
+  renderChart(calculate());
+};
+
+[campaignStartInput, campaignEndInput].forEach(input =>
+  input.addEventListener('input', recalculateAll)
+);
+
+// re-render now that chart logic exists
+recalculateAll();
