@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeadPredictor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- LEFT PANEL: inputs -->
+    <div class="panel inputs-panel">
+      <h1 class="logo">LeadPredictor</h1>
+
+      <label>Language
+        <select id="language">
+          <option value="en">English</option>
+          <option value="bg">Български</option>
+        </select>
+      </label>
+
+      <label>Currency
+        <select id="currency">
+          <option value="USD">$ US Dollar</option>
+          <option value="EUR">€ Euro</option>
+          <option value="BGN">лв Bulgarian Lev</option>
+        </select>
+      </label>
+
+      <label>Campaign Start
+        <input type="date" id="campaignStart" value="2026-05-08" />
+      </label>
+
+      <label>Campaign End
+        <input type="date" id="campaignEnd" value="2026-11-04" />
+      </label>
+
+      <label>Total Revenue
+        <input type="number" id="totalRevenue" value="10000" />
+      </label>
+
+      <label>Avg. Order Value
+        <input type="number" id="avgOrderValue" value="1000" />
+      </label>
+    </div>
+
+    <!-- RIGHT SIDE: chart + stats -->
+    <div class="panel main-panel">
+      <div class="chart-area">
+        <canvas id="chart"></canvas>
+      </div>
+
+      <div class="stats-area">
+        <div class="stat-card" id="prospectsCard">
+          <div class="stat-label">Prospects</div>
+          <div class="stat-value" id="prospectsValue">0</div>
+          <div class="stat-percent" id="prospectsPercent">100%</div>
+          <div class="progress-bar"><div class="progress-fill" id="prospectsFill"></div></div>
+        </div>
+
+        <div class="stat-card" id="leadsCard">
+          <div class="stat-label">Leads</div>
+          <div class="stat-value" id="leadsValue">0</div>
+          <div class="stat-percent" id="leadsPercent">0%</div>
+          <div class="progress-bar"><div class="progress-fill" id="leadsFill"></div></div>
+        </div>
+
+        <div class="stat-card" id="customersCard">
+          <div class="stat-label">Customers</div>
+          <div class="stat-value" id="customersValue">0</div>
+          <div class="stat-percent" id="customersPercent">0%</div>
+          <div class="progress-bar"><div class="progress-fill" id="customersFill"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: sliders -->
+    <div class="panel sliders-panel">
+      <label>Lead Response Rate
+        <input type="range" id="leadResponseRate" min="1" max="100" value="40" />
+        <span id="leadResponseRateValue">40.00%</span>
+      </label>
+
+      <label>Prospect Response Rate
+        <input type="range" id="prospectResponseRate" min="1" max="100" value="20" />
+        <span id="prospectResponseRateValue">20.00%</span>
+      </label>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
