@@ -5,6 +5,10 @@ const leadResponseRateInput = document.getElementById('leadResponseRate');
 const prospectResponseRateInput = document.getElementById('prospectResponseRate');
 const leadResponseRateValue = document.getElementById('leadResponseRateValue');
 const prospectResponseRateValue = document.getElementById('prospectResponseRateValue');
+const campaignStartInput = document.getElementById('campaignStart');
+const campaignEndInput = document.getElementById('campaignEnd');
+const currencySelect = document.getElementById('currency');
+const languageSelect = document.getElementById('language');
 
 const prospectsValueEl = document.getElementById('prospectsValue');
 const leadsValueEl = document.getElementById('leadsValue');
@@ -17,6 +21,46 @@ const customersPercentEl = document.getElementById('customersPercent');
 const prospectsFillEl = document.getElementById('prospectsFill');
 const leadsFillEl = document.getElementById('leadsFill');
 const customersFillEl = document.getElementById('customersFill');
+
+// --- Translations (must be defined before anything that uses them) ---
+const TRANSLATIONS = {
+  en: {
+    language: 'Language',
+    currency: 'Currency',
+    campaignStart: 'Campaign Start',
+    campaignEnd: 'Campaign End',
+    totalRevenue: 'Total Revenue',
+    avgOrderValue: 'Avg. Order Value',
+    prospects: 'Prospects',
+    leads: 'Leads',
+    customers: 'Customers',
+    leadResponseRate: 'Lead Response Rate',
+    prospectResponseRate: 'Prospect Response Rate',
+    months: 'Months',
+    people: 'people'
+  },
+  bg: {
+    language: 'Език',
+    currency: 'Валута',
+    campaignStart: 'Начало на кампанията',
+    campaignEnd: 'Край на кампанията',
+    totalRevenue: 'Общ оборот',
+    avgOrderValue: 'Средна стойност на поръчката',
+    prospects: 'Контакти',
+    leads: 'Потенциални клиенти',
+    customers: 'Клиенти',
+    leadResponseRate: 'Процент отговори от потенциални клиенти',
+    prospectResponseRate: 'Процент отговори от контакти',
+    months: 'Месеци',
+    people: 'хора'
+  }
+};
+
+const CURRENCY_SYMBOLS = {
+  USD: '$',
+  EUR: '€',
+  BGN: 'лв'
+};
 
 // --- Core formulas (per task hints) ---
 // Customers = Revenue / Avg Order Value
@@ -40,7 +84,6 @@ function updateStatsUI({ customers, leads, prospects }) {
   leadsValueEl.textContent = Math.round(leads);
   customersValueEl.textContent = Math.round(customers);
 
-  // Prospects is always the top of the funnel = 100%
   const leadsPercent = prospects > 0 ? (leads / prospects) * 100 : 0;
   const customersPercent = prospects > 0 ? (customers / prospects) * 100 : 0;
 
@@ -58,27 +101,7 @@ function updateSliderLabels() {
   prospectResponseRateValue.textContent = parseFloat(prospectResponseRateInput.value).toFixed(2) + '%';
 }
 
-function recalculateAll() {
-  updateSliderLabels();
-  const results = calculate();
-  updateStatsUI(results);
-}
-
-// --- Wire up events ---
-[
-  totalRevenueInput,
-  avgOrderValueInput,
-  leadResponseRateInput,
-  prospectResponseRateInput
-].forEach(input => input.addEventListener('input', recalculateAll));
-
-// initial render
-recalculateAll();
-
 // --- Monthly chart (linear ramp from month 1 to campaign totals) ---
-const campaignStartInput = document.getElementById('campaignStart');
-const campaignEndInput = document.getElementById('campaignEnd');
-
 function getMonthCount() {
   const start = new Date(campaignStartInput.value);
   const end = new Date(campaignEndInput.value);
@@ -89,10 +112,11 @@ function getMonthCount() {
 let chartInstance = null;
 
 function renderChart({ customers, leads, prospects }) {
+  const lang = TRANSLATIONS[languageSelect.value] ? languageSelect.value : 'en';
+  const t = TRANSLATIONS[lang];
   const monthCount = getMonthCount();
   const labels = Array.from({ length: monthCount }, (_, i) => `${i + 1}`);
 
-  // Linear ramp: month i shows (i/monthCount) fraction of the final totals
   const prospectsData = labels.map((_, i) => Math.round((prospects * (i + 1)) / monthCount));
   const leadsData = labels.map((_, i) => Math.round((leads * (i + 1)) / monthCount));
   const customersData = labels.map((_, i) => Math.round((customers * (i + 1)) / monthCount));
@@ -108,16 +132,16 @@ function renderChart({ customers, leads, prospects }) {
     data: {
       labels,
       datasets: [
-        { label: 'Prospects', data: prospectsData, backgroundColor: '#64748b' },
-        { label: 'Leads', data: leadsData, backgroundColor: '#94a3b8' },
-        { label: 'Customers', data: customersData, backgroundColor: '#e2e8f0' }
+        { label: t.prospects, data: prospectsData, backgroundColor: '#64748b' },
+        { label: t.leads, data: leadsData, backgroundColor: '#94a3b8' },
+        { label: t.customers, data: customersData, backgroundColor: '#e2e8f0' }
       ]
     },
     options: {
       indexAxis: 'y',
       scales: {
-        x: { title: { display: true, text: 'people' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-        y: { title: { display: true, text: 'Months' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+        x: { title: { display: true, text: t.people }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+        y: { title: { display: true, text: t.months }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
       },
       plugins: {
         legend: { labels: { color: '#e2e8f0' } }
@@ -126,29 +150,7 @@ function renderChart({ customers, leads, prospects }) {
   });
 }
 
-// hook chart rendering into the existing recalculate flow
-const originalRecalculateAll = recalculateAll;
-recalculateAll = function () {
-  originalRecalculateAll();
-  renderChart(calculate());
-};
-
-[campaignStartInput, campaignEndInput].forEach(input =>
-  input.addEventListener('input', recalculateAll)
-);
-
-// re-render now that chart logic exists
-recalculateAll();
-
 // --- Currency symbol switching ---
-const currencySelect = document.getElementById('currency');
-
-const CURRENCY_SYMBOLS = {
-  USD: '$',
-  EUR: '€',
-  BGN: 'лв'
-};
-
 function updateCurrencyLabels() {
   const symbol = CURRENCY_SYMBOLS[currencySelect.value] || '$';
   document.querySelectorAll('.currency-symbol').forEach(el => {
@@ -156,40 +158,7 @@ function updateCurrencyLabels() {
   });
 }
 
-currencySelect.addEventListener('input', updateCurrencyLabels);
-updateCurrencyLabels();
-// --- Translations ---
-const TRANSLATIONS = {
-  en: {
-    language: 'Language',
-    currency: 'Currency',
-    campaignStart: 'Campaign Start',
-    campaignEnd: 'Campaign End',
-    totalRevenue: 'Total Revenue',
-    avgOrderValue: 'Avg. Order Value',
-    prospects: 'Prospects',
-    leads: 'Leads',
-    customers: 'Customers',
-    leadResponseRate: 'Lead Response Rate',
-    prospectResponseRate: 'Prospect Response Rate'
-  },
-  bg: {
-    language: 'Език',
-    currency: 'Валута',
-    campaignStart: 'Начало на кампанията',
-    campaignEnd: 'Край на кампанията',
-    totalRevenue: 'Общ оборот',
-    avgOrderValue: 'Средна стойност на поръчката',
-    prospects: 'Контакти',
-    leads: 'Потенциални клиенти',
-    customers: 'Клиенти',
-    leadResponseRate: 'Процент отговори от потенциални клиенти',
-    prospectResponseRate: 'Процент отговори от контакти'
-  }
-};
-
-const languageSelect = document.getElementById('language');
-
+// --- Language switching ---
 function applyLanguage() {
   const lang = TRANSLATIONS[languageSelect.value] ? languageSelect.value : 'en';
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -200,5 +169,32 @@ function applyLanguage() {
   });
 }
 
-languageSelect.addEventListener('input', applyLanguage);
+// --- Master refresh: recalculates numbers, chart, labels ---
+function recalculateAll() {
+  updateSliderLabels();
+  const results = calculate();
+  updateStatsUI(results);
+  renderChart(results);
+}
+
+// --- Wire up events ---
+[
+  totalRevenueInput,
+  avgOrderValueInput,
+  leadResponseRateInput,
+  prospectResponseRateInput,
+  campaignStartInput,
+  campaignEndInput
+].forEach(input => input.addEventListener('input', recalculateAll));
+
+currencySelect.addEventListener('input', updateCurrencyLabels);
+
+languageSelect.addEventListener('input', () => {
+  applyLanguage();
+  recalculateAll();
+});
+
+// --- Initial render ---
+updateCurrencyLabels();
 applyLanguage();
+recalculateAll();

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="app">
+  <div class="app">
 
     <!-- LEFT PANEL: inputs -->
     <div class="panel inputs-panel">
@@ -97,53 +97,7 @@
 
   </div>
 
-    <!-- RIGHT SIDE: chart + stats -->
-    <div class="panel main-panel">
-      <div class="chart-area">
-        <canvas id="chart"></canvas>
-      </div>
-
-      <div class="stats-area">
-        <div class="stat-card" id="prospectsCard">
-          <div class="stat-label">Prospects</div>
-          <div class="stat-value" id="prospectsValue">0</div>
-          <div class="stat-percent" id="prospectsPercent">100%</div>
-          <div class="progress-bar"><div class="progress-fill" id="prospectsFill"></div></div>
-        </div>
-
-        <div class="stat-card" id="leadsCard">
-          <div class="stat-label">Leads</div>
-          <div class="stat-value" id="leadsValue">0</div>
-          <div class="stat-percent" id="leadsPercent">0%</div>
-          <div class="progress-bar"><div class="progress-fill" id="leadsFill"></div></div>
-        </div>
-
-        <div class="stat-card" id="customersCard">
-          <div class="stat-label">Customers</div>
-          <div class="stat-value" id="customersValue">0</div>
-          <div class="stat-percent" id="customersPercent">0%</div>
-          <div class="progress-bar"><div class="progress-fill" id="customersFill"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOTTOM: sliders -->
-    <div class="panel sliders-panel">
-      <label>Lead Response Rate
-        <input type="range" id="leadResponseRate" min="1" max="100" value="40" />
-        <span id="leadResponseRateValue">40.00%</span>
-      </label>
-
-      <label>Prospect Response Rate
-        <input type="range" id="prospectResponseRate" min="1" max="100" value="20" />
-        <span id="prospectResponseRateValue">20.00%</span>
-      </label>
-    </div>
-
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-
   <script src="script.js"></script>
 </body>
 </html>
